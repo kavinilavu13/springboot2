@@ -1,8 +1,12 @@
 package com.px.mecca.hotelbooking.enitity;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -16,10 +20,14 @@ public class EmployeeEntity {
 	private String Name;
 	@Column(name="emailid")
 	private String Emailid;
-	@Column(name="password")
+	@Column(name="employeepassword")
 	private String Password;
 	@Column(name="phonenumber")
 	private String Phonenumber;
+	@OneToOne(cascade = CascadeType.ALL,fetch=FetchType.EAGER)
+	@JoinColumn(name="employeeaddress")	//foreign key relationship
+	private AddressEntity address;//address is table name
+	
 	public int getEmployeeId() {
 		return EmployeeId;
 	}
@@ -50,4 +58,13 @@ public class EmployeeEntity {
 	public void setPhonenumber(String phonenumber) {
 		Phonenumber = phonenumber;
 	}
+
+	public AddressEntity getAddress() 
+	{
+		return address;
+	}
+	public void setAddress(AddressEntity address) {
+		this.address = address;
+	}
 }
+
