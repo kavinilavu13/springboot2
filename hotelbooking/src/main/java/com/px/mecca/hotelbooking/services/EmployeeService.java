@@ -4,16 +4,37 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.px.mecca.hotelbooking.enitity.AddressEntity;
 import com.px.mecca.hotelbooking.enitity.EmployeeEntity;
 import com.px.mecca.hotelbooking.repository.EmployeeRepository;
+import com.px.mecca.hotelbooking.request.AddressRequest;
+import com.px.mecca.hotelbooking.request.EmployeeRequest;
 @Service
 public class EmployeeService 
 {
 	@Autowired
 	EmployeeRepository employeeRepository;
-	public EmployeeEntity createOrUpdateEmployee(EmployeeEntity entity)
+	public EmployeeEntity createOrUpdateEmployee(EmployeeRequest empRequest)
 	{
-		System.err.println(entity.getEmployeeId()+","+entity.getName()+","+entity.getPhonenumber());
+		
+		System.err.println(empRequest.getEmployeeId()+","+empRequest.getName()+","+empRequest.getPhonenumber());
+	
+		AddressRequest address=empRequest.getAddress();
+		
+		AddressEntity adressentity=new AddressEntity();
+		adressentity.setState(address.getState());
+		adressentity.setPincode(address.getPincode());
+		adressentity.setCity(address.getCity());
+		
+	
+		EmployeeEntity entity=new EmployeeEntity();
+		entity.setEmailid(empRequest.getEmailid());
+		entity.setName(empRequest.getName());
+		entity.setPassword(empRequest.getPassword());
+		entity.setPhonenumber(empRequest.getPhonenumber());
+	   entity.setAddress(adressentity);
+		
 	    Optional<EmployeeEntity> employee = employeeRepository.findById(entity.getEmployeeId());
 		 if(employee.isPresent())
 	        {
@@ -22,6 +43,7 @@ public class EmployeeService
 				newEntity.setName(entity.getName());
 				newEntity.setPassword(entity.getPassword());
 				newEntity.setPhonenumber(entity.getPhonenumber());
+		
 	            newEntity = employeeRepository.save(newEntity);	             
 	            return newEntity;
 	        } else {
